@@ -16,28 +16,36 @@
   <meta name="description" content="Moindyの博客">
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
-  <meta name="description" content="实验室摸鱼之余找到了一篇基于go语言的一个免杀项目，于是手痒立刻上手试试： 1https:&#x2F;&#x2F;github.com&#x2F;Hangingsword&#x2F;HouQing  该项目使用的是golang语言，可以快速生成exe可执行文件 下载完是两个文件： ​                 其中code.go是用来生成加载了shellcode的图片，loader.go则是加载器。(原理类似与分离免杀 首先需要先">
+  <meta name="description" content="首先将智能合约打包并且上链部署(ps:参考合约部署.md) 使用fabric-ca-cline注册生成org1和org2，org1代表管理端(铸币端)，org2代表接受端并生成其身份证书文件和MSP文件  org2端同理，先注册然后使用fabric-ca-cline enroll生成 铸币阶段使用peer来为org1铸造一个NFT  mint函数验证客户端是铸币者组织的成员然后为其生成一个不可替代">
 <meta property="og:type" content="article">
-<meta property="og:title" content="go_bypass">
-<meta property="og:url" content="http://example.com/2021/12/08/go-bypass/index.html">
+<meta property="og:title" content="NFT铸造and交易">
+<meta property="og:url" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/index.html">
 <meta property="og:site_name" content="Moindy&#39;Blog">
-<meta property="og:description" content="实验室摸鱼之余找到了一篇基于go语言的一个免杀项目，于是手痒立刻上手试试： 1https:&#x2F;&#x2F;github.com&#x2F;Hangingsword&#x2F;HouQing  该项目使用的是golang语言，可以快速生成exe可执行文件 下载完是两个文件： ​                 其中code.go是用来生成加载了shellcode的图片，loader.go则是加载器。(原理类似与分离免杀 首先需要先">
+<meta property="og:description" content="首先将智能合约打包并且上链部署(ps:参考合约部署.md) 使用fabric-ca-cline注册生成org1和org2，org1代表管理端(铸币端)，org2代表接受端并生成其身份证书文件和MSP文件  org2端同理，先注册然后使用fabric-ca-cline enroll生成 铸币阶段使用peer来为org1铸造一个NFT  mint函数验证客户端是铸币者组织的成员然后为其生成一个不可替代">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2021/12/08/go-bypass/image-20210927165424984.png">
-<meta property="og:image" content="http://example.com/2021/12/08/go-bypass/image-20210927165631535.png">
-<meta property="og:image" content="http://example.com/2021/12/08/go-bypass/image-20210927170154557.png">
-<meta property="og:image" content="http://example.com/2021/12/08/go-bypass/image-20210927170629262.png">
-<meta property="og:image" content="http://example.com/2021/12/08/go-bypass/image-20210927170801795.png">
-<meta property="og:image" content="http://example.com/2021/12/08/go-bypass/image-20210927171155128.png">
-<meta property="og:image" content="http://example.com/2021/12/08/go-bypass/image-20210927171733745.png">
-<meta property="og:image" content="http://example.com/2021/12/08/go-bypass/image-20210927172534445.png">
-<meta property="article:published_time" content="2021-12-08T05:02:46.000Z">
-<meta property="article:modified_time" content="2021-12-08T05:33:52.315Z">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327204309210.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205032216.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205213760.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205257570.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205720956.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205934990.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327210302514.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327210358289">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327210444083.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327210505718.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327211908326.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327212001845.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327212236738.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327212633666.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327212721379.png">
+<meta property="og:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327213928865.png">
+<meta property="article:published_time" content="2022-03-12T04:30:32.000Z">
+<meta property="article:modified_time" content="2022-04-05T08:40:32.075Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/2021/12/08/go-bypass/image-20210927165424984.png">
+<meta name="twitter:image" content="http://example.com/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327204309210.png">
   
-  <title>go_bypass - Moindy&#39;Blog</title>
+  <title>NFT铸造and交易 - Moindy&#39;Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -183,7 +191,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="go_bypass">
+            <span class="h2" id="subtitle" title="NFT铸造and交易">
               
             </span>
 
@@ -193,8 +201,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-12-08 13:02" pubdate>
-        2021年12月8日 下午
+      <time datetime="2022-03-12 12:30" pubdate>
+        2022年3月12日 下午
       </time>
     </span>
   
@@ -204,7 +212,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      907 字
+      1.4k 字
     </span>
   
 
@@ -213,7 +221,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3 分钟
+      4 分钟
     </span>
   
 
@@ -242,55 +250,56 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">go_bypass</h1>
+            <h1 style="display: none">NFT铸造and交易</h1>
             
             <div class="markdown-body">
-              <p>实验室摸鱼之余找到了一篇基于go语言的一个免杀项目，于是手痒立刻上手试试：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs https://github.com/Hangingsword/HouQing">https://github.com/Hangingsword/HouQing<br></code></pre></td></tr></table></figure>
-
-<p>该项目使用的是golang语言，可以快速生成exe可执行文件</p>
-<p>下载完是两个文件：</p>
-<p>​                <img src="/2021/12/08/go-bypass/image-20210927165424984.png" srcset="/img/loading.gif" lazyload alt="image-20211208105743208"></p>
-<p>其中code.go是用来生成加载了shellcode的图片，loader.go则是加载器。(原理类似与分离免杀</p>
-<p>首先需要先打开code.go文件，修改如图的两个key值</p>
-<img src="/2021/12/08/go-bypass/image-20210927165631535.png" srcset="/img/loading.gif" lazyload alt="image-20210927165631535.png" style="zoom: 67%;">
-
-<p>其中code.go和Loader.go修改的值需要相同，然后通过cs生成一个java的shellcode</p>
-<p>image-20210927170154557.png</p>
-<p>然后将生成的shellcode放到code.go中进行一个xor混淆</p>
-<p><img src="/2021/12/08/go-bypass/image-20210927170154557.png" srcset="/img/loading.gif" lazyload alt="image-20210927170154557"></p>
-<p>然后随便找一个图片进行shellcode注入（注入的时候记得关本地的杀毒要不然会报错），然后将注入成功后的图片放入服务器上，用python开一个http服务。</p>
-<p><img src="/2021/12/08/go-bypass/image-20210927170629262.png" srcset="/img/loading.gif" lazyload alt="image-20210927170629262"></p>
-<p>再在加载器Loader.go中修改成自己服务器地址</p>
-<img src="/2021/12/08/go-bypass/image-20210927170801795.png" srcset="/img/loading.gif" lazyload alt="image-20210927170801795" style="zoom: 67%;">
-
-<p>在本地进行测试一下，成功上线</p>
-<p><img src="/2021/12/08/go-bypass/image-20210927171155128.png" srcset="/img/loading.gif" lazyload alt="image-20210927171155128"></p>
-<p>此时我们可以用go对这个文件进行一个加工，通过执行命令让其生成一个可执行文件</p>
-<figure class="highlight go"><figcaption><span>build -ldflags</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">go</span> build -ldflags=<span class="hljs-string">&quot;-H windowsgui&quot;</span> Loader.<span class="hljs-keyword">go</span>  <span class="hljs-comment">//-ldflags=&quot;-H windowsgui&quot; 防止弹窗</span><br>尝试用<span class="hljs-keyword">go</span>将文件编译并带上图片但是发现再点击直接无法上线了，文件也被压缩了一半(太菜了原理还不太懂还得研究一下)，这个方法gg，换一个方法用自解压试试。<br></code></pre></td></tr></table></figure>
-
-<p>使用Winrar把你需要的文件和免杀的马子一起打包，我这里用的是图片。</p>
+              <p>首先将智能合约打包并且上链部署(ps:参考合约部署.md)</p>
+<p>使用fabric-ca-cline注册生成org1和org2，org1代表管理端(铸币端)，org2代表接受端并生成其身份证书文件和MSP文件</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327204309210.png" srcset="/img/loading.gif" lazyload alt="image-20220327204309210"></p>
+<p>org2端同理，先注册然后使用fabric-ca-cline enroll生成</p>
+<h3 id="铸币阶段"><a href="#铸币阶段" class="headerlink" title="铸币阶段"></a>铸币阶段</h3><p>使用peer来为org1铸造一个NFT</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205032216.png" srcset="/img/loading.gif" lazyload alt="image-20220327205032216"></p>
+<p>mint函数验证客户端是铸币者组织的成员然后为其生成一个不可替代的令牌，可以通过调用ClineAccountBalance函数来查看账户余额</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205213760.png" srcset="/img/loading.gif" lazyload alt="image-20220327205213760"></p>
+<p>我们还可以通过调用 <code>OwnerOf</code> 函数来检查已发行令牌的所有者。</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205257570.png" srcset="/img/loading.gif" lazyload alt="image-20220327205257570"></p>
+<h3 id="交易阶段"><a href="#交易阶段" class="headerlink" title="交易阶段"></a>交易阶段</h3><p>org1铸造者转账给org2，首先org2需要提供自己的账户ID作为收款地址，客户端可以从他们自己的公共证书中获取他们的账户ID，但是为了交易的准确和安全性，合约中ClientAccountID可以提供查看ID来将其作为账户ID</p>
+<p>首先获取自己的ID</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205720956.png" srcset="/img/loading.gif" lazyload alt="image-20220327205720956"></p>
+<p>org2接受者向org1提供其用户ID之后，铸币者可以发起从他们账户到接受者的交易。（要转移不可替代的代币，铸币者还需要提供自己的账户 ID）</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327205934990.png" srcset="/img/loading.gif" lazyload alt="image-20220327205934990"></p>
+<p>进行交易，发现返回结果为successful，表示转账成功</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327210302514.png" srcset="/img/loading.gif" lazyload alt="image-20220327210302514"></p>
+<p><code>TransferFrom</code> 函数验证给定不可替代令牌的所有权。<br>然后它将不可替代令牌的所有权从当前所有者更改为接收者。<br>它还将借记呼叫者的帐户并记入收件人的帐户。 请注意，示例合约将自动为接收者创建一个余额为零的账户，如果该账户尚不存在的话。</p>
+<p>这时候在查询余额发现余额为0</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327210358289" srcset="/img/loading.gif" lazyload alt="image-20220327210358289"></p>
+<p>然后使用 Org2 终端，让我们请求接收者的余额：</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327210444083.png" srcset="/img/loading.gif" lazyload alt="image-20220327210444083"></p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327210505718.png" srcset="/img/loading.gif" lazyload alt="image-20220327210505718"></p>
+<p>表示转账成功</p>
+<h3 id="第三方转账-特定代币"><a href="#第三方转账-特定代币" class="headerlink" title="第三方转账 (特定代币)"></a>第三方转账 (特定代币)</h3><p>适用场景：</p>
 <ul>
-<li><p>首先选择自解压格式，然后–&gt;高级–&gt;自解压文件选项</p>
-</li>
-<li><p>解压路径随便设置这里设置的是c:/windows/temp</p>
-</li>
-<li><p>安装解压后运行:</p>
-</li>
-<li><pre><code>c:/windows/temp/test.jpg     
-
-c:/windows/temp/by_pass.exe
-</code></pre>
-</li>
-<li><p>模式–&gt;静默模式隐藏全部</p>
-</li>
-<li><p>更新–&gt;解压并更新文件和覆盖全部文件</p>
-</li>
+<li>铸币者已经根据上述场景创建了一个不可替代的代币。</li>
+<li>同一铸币者客户端使用 <code>Approve</code> 功能授予运营商客户端代表铸币者转移具有特定代币 ID 的不可替代代币的权限。假设运营商已将其客户端 ID 提供给带外的“批准”呼叫者。</li>
+<li>然后运营商客户端将使用“TransferFrom”功能代表铸币者将不可替代的代币转移到接收者的账户。假设接收方已将其客户端 ID 提供给带外的“TransferFrom”调用方。</li>
 </ul>
-<p><img src="/2021/12/08/go-bypass/image-20210927171733745.png" srcset="/img/loading.gif" lazyload alt="image-20210927171733745"></p>
-<p>生成好了之后在使用Resource Hacker将其图片替换一下就可以用来钓鱼了dddd</p>
-<p>测试结果(亲测可以过火绒、defender、360)</p>
-<p><img src="/2021/12/08/go-bypass/image-20210927172534445.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先为第三方用户注册一个身份      test_1/test123</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327211908326.png" srcset="/img/loading.gif" lazyload alt="image-20220327211908326"></p>
+<p>为其生成身份证书andMSP文件夹</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327212001845.png" srcset="/img/loading.gif" lazyload alt="image-20220327212001845"></p>
+<p>将节点OU配置文件复制到MSP文件夹中</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">cp <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>peerOrganizations<span class="hljs-regexp">/org1.example.com/m</span>sp<span class="hljs-regexp">/config.yaml $&#123;PWD&#125;/</span>organizations<span class="hljs-regexp">/peerOrganizations/</span>org1.example.com<span class="hljs-regexp">/users/</span>operator@org1.example.com<span class="hljs-regexp">/msp/</span>config.yaml<br></code></pre></td></tr></table></figure>
+
+<p>查询cline id可以看到id为test_1</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327212236738.png" srcset="/img/loading.gif" lazyload alt="image-20220327212236738"></p>
+<p>org1客户端发行一个NFT然后请求转移令牌</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327212633666.png" srcset="/img/loading.gif" lazyload alt="image-20220327212633666"></p>
+<p>然后可以通过Getapproved函数来检查运营商客户端的批准情况</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327212721379.png" srcset="/img/loading.gif" lazyload alt="image-20220327212721379"></p>
+<p>然后对代币进行交易</p>
+<p><img src="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/image-20220327213928865.png" srcset="/img/loading.gif" lazyload alt="image-20220327213928865"></p>
+<p><code>TransferFrom</code> 函数验证与调用客户端 ID 关联的帐户是否有权代表当前所有者转移给定令牌。<br>然后它将不可替代令牌的所有权从当前所有者更改为接收者。<br>它还将借记前所有者的帐户并贷记收件人的帐户。<br>它还将删除运营商对铸币者批准的这种不可替代令牌的许可。<br>请注意，示例合约将自动为接收者创建一个余额为零的账户，如果该账户尚不存在的话。</p>
+<p><b><font color="red">参考fabric-samples中token-erc-721例子中的README.md实现</font></b></p>
 
             </div>
             <hr>
@@ -311,9 +320,9 @@ c:/windows/temp/by_pass.exe
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/03/03/%E5%AE%89%E8%A3%85%E9%93%BE%E7%A0%81/">
+                      <a href="/2022/03/29/fabric-gateway-java/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">安装链码</span>
+                        <span class="hidden-mobile">fabric-gateway-java</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -321,8 +330,8 @@ c:/windows/temp/by_pass.exe
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/12/08/Badusb/">
-                        <span class="hidden-mobile">Badusb</span>
+                      <a href="/2022/03/03/%E5%AE%89%E8%A3%85%E9%93%BE%E7%A0%81/">
+                        <span class="hidden-mobile">安装链码</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

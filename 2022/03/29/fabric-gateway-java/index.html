@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Moindyの博客">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <meta name="description" content="部署合约1.maven部署需要下载很多依赖导致合约部署过程会非常漫长，所以可以直接在IDEA中对maven进行封装  封装好的jar包就会保存在当前项目的target下，将生成好的chaincode.jar复制到虚拟机需要部署合约的文件夹中  然后对合约进行部署： 12345#将bin目录中的二进制文件添加到CLI路径中export PATH&#x3D;$&amp;#123;PWD&amp;#125;&#x2F;..&#x2F;bin:$PA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fabric-gateway-java">
+<meta property="og:url" content="http://example.com/2022/03/29/fabric-gateway-java/index.html">
+<meta property="og:site_name" content="Moindy&#39;Blog">
+<meta property="og:description" content="部署合约1.maven部署需要下载很多依赖导致合约部署过程会非常漫长，所以可以直接在IDEA中对maven进行封装  封装好的jar包就会保存在当前项目的target下，将生成好的chaincode.jar复制到虚拟机需要部署合约的文件夹中  然后对合约进行部署： 12345#将bin目录中的二进制文件添加到CLI路径中export PATH&#x3D;$&amp;#123;PWD&amp;#125;&#x2F;..&#x2F;bin:$PA">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330171505985">
+<meta property="og:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330171640230">
+<meta property="og:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330172320681">
+<meta property="og:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330205633378">
+<meta property="og:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330210328591">
+<meta property="og:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330210432218">
+<meta property="og:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330210441286">
+<meta property="og:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330210635136">
+<meta property="og:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330210708825">
+<meta property="article:published_time" content="2022-03-29T11:40:58.000Z">
+<meta property="article:modified_time" content="2022-04-05T08:43:38.135Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/03/29/fabric-gateway-java/image-20220330171505985">
+  
+  <title>fabric-gateway-java - Moindy&#39;Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Moindy</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="fabric-gateway-java">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-03-29 19:40" pubdate>
+        2022年3月29日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      18 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">fabric-gateway-java</h1>
+            
+            <div class="markdown-body">
+              <h3 id="部署合约"><a href="#部署合约" class="headerlink" title="部署合约"></a>部署合约</h3><p>1.maven部署需要下载很多依赖导致合约部署过程会非常漫长，所以可以直接在IDEA中对maven进行封装</p>
+<p><img src="/2022/03/29/fabric-gateway-java/image-20220330171505985" srcset="/img/loading.gif" lazyload alt="image-20220330171505985"></p>
+<p>封装好的jar包就会保存在当前项目的target下，将生成好的chaincode.jar复制到虚拟机需要部署合约的文件夹中</p>
+<p><img src="/2022/03/29/fabric-gateway-java/image-20220330171640230" srcset="/img/loading.gif" lazyload alt="image-20220330171640230"></p>
+<p>然后对合约进行部署：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#将bin目录中的二进制文件添加到CLI路径中</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/../bin:$PATH<br><span class="hljs-comment">#使用peer cli进行创建</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">FABRIC_CFG_PATH</span>=<span class="hljs-variable">$PWD</span>/../config/<br><span class="hljs-comment">#设置fabric_cfg_path指向fabric-samples的core.yaml文件</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="1-1-创建链码包"><a href="#1-1-创建链码包" class="headerlink" title="1.1 创建链码包"></a>1.1 创建链码包</h4><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">peer lifecycle chaincode package java-gateway-demo.tar.gz <span class="hljs-params">--path</span> <span class="hljs-string">../java-gateway-demo/</span> <span class="hljs-params">--lang</span> java <span class="hljs-params">--label</span> java-gateway-demo_1<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-2-安装链码"><a href="#1-2-安装链码" class="headerlink" title="1.2 安装链码"></a>1.2 安装链码</h4><p>设置org1节点安装链码</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_TLS_ENABLED</span>=<span class="hljs-literal">true</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_LOCALMSPID</span>=<span class="hljs-string">&quot;Org1MSP&quot;</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_TLS_ROOTCERT_FILE</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_MSPCONFIGPATH</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_ADDRESS</span>=localhost:7051<br><span class="hljs-comment">#安装链码</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">peer </span>lifecycle chaincode install java-gateway-demo.tar.gz<br></code></pre></td></tr></table></figure>
+
+<p>org2同理</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_LOCALMSPID</span>=<span class="hljs-string">&quot;Org2MSP&quot;</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_TLS_ROOTCERT_FILE</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_TLS_ROOTCERT_FILE</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_MSPCONFIGPATH</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_ADDRESS</span>=localhost:9051<br><span class="hljs-comment">#安装链码</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">peer </span>lifecycle chaincode install java-gateway-demo.tar.gz<br></code></pre></td></tr></table></figure>
+
+<strong>
+<font color="red">
+注意：安装链码时，链码由peer节点构建。如果智能合约代码有问题，install命令将从链码中返回所有构建错误。
+因为安装 java 链码的时候需要经过 maven 构建以及下载依赖包的过程这个过程有可能会较慢，所以 install 命令有可能会返回一个超时错误:。但是其实链码的 docker 容器内此时还在执行构建任务没有完成。等到构建成功了链码包也就安装成功了。
+</font>
+</strong>
+
+<p><img src="/2022/03/29/fabric-gateway-java/image-20220330172320681" srcset="/img/loading.gif" lazyload alt="image-20220330172320681"></p>
+<h4 id="1-3-通过链码定义参数"><a href="#1-3-通过链码定义参数" class="headerlink" title="1.3 通过链码定义参数"></a>1.3 通过链码定义参数</h4><p>安装链码之后需要通过链码定义名称、版本、和背书策略</p>
+<p>如果链码中已经安装过则需要在其组织通过的链码定义中包括包ID。包ID将用于将peer节点上安装的链码与通过的链码的定义相关联，并且允许组织使用链码来认可交易。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment">#查询包的ID</span><br><span class="hljs-attribute">peer</span> lifecycle chaincode queryinstalled<br><span class="hljs-comment">#将返回的结果添加到环境变量中</span><br><span class="hljs-attribute">export</span> NEW_CC_PACKAGE_ID=hyperledger-fabric-contract-java-demo_<span class="hljs-number">2</span>:c<span class="hljs-number">0</span>f<span class="hljs-number">7</span>f<span class="hljs-number">11</span>c<span class="hljs-number">5</span>a<span class="hljs-number">75</span>b<span class="hljs-number">0872</span>cec<span class="hljs-number">6</span>cf<span class="hljs-number">69</span>ee<span class="hljs-number">6</span>c<span class="hljs-number">8</span>ca<span class="hljs-number">7</span>d<span class="hljs-number">6</span>cdec<span class="hljs-number">5</span>df<span class="hljs-number">35</span>e<span class="hljs-number">1364</span>c<span class="hljs-number">4</span>e<span class="hljs-number">949064</span>a<span class="hljs-number">8</span>b<span class="hljs-number">831</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="1-4-org1通过链码定义"><a href="#1-4-org1通过链码定义" class="headerlink" title="1.4 org1通过链码定义"></a>1.4 org1通过链码定义</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#设置链码</span><br>export CORE_PEER_LOCALMSPID=<span class="hljs-string">&quot;Org1MSP&quot;</span><br>export CORE_PEER_MSPCONFIGPATH=<span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>peerOrganizations<span class="hljs-regexp">/org1.example.com/u</span>sers<span class="hljs-regexp">/Admin@org1.example.com/m</span>sp<br>export CORE_PEER_TLS_ROOTCERT_FILE=<span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>peerOrganizations<span class="hljs-regexp">/org1.example.com/</span>peers<span class="hljs-regexp">/peer0.org1.example.com/</span>tls/ca.crt<br>export CORE_PEER_ADDRESS=localhost:<span class="hljs-number">7051</span><br><span class="hljs-comment">#approveformyorg定义</span><br>peer lifecycle chaincode approveformyorg -o localhost:<span class="hljs-number">7050</span> --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name hyperledger-fabric-app-java-demo --version <span class="hljs-number">2.0</span> --package-id <span class="hljs-variable">$NEW_CC_PACKAGE_ID</span> --sequence <span class="hljs-number">2</span> --tls --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem<br></code></pre></td></tr></table></figure>
+
+<h4 id="1-5-将链码提交给通道"><a href="#1-5-将链码提交给通道" class="headerlink" title="1.5 将链码提交给通道"></a>1.5 将链码提交给通道</h4><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs gradle">#使用checkcommitreadiness来检查是否已经批准相同的链码定义：<br>peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name hyperledger-fabric-app-java-demo --version <span class="hljs-number">2.0</span> --sequence <span class="hljs-number">2</span> --tls --cafile $&#123;PWD&#125;<span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem --output json<br><br><span class="hljs-keyword">return</span>如下则表示准许通过<br>&#123;<br>	<span class="hljs-string">&quot;approvals&quot;</span>: &#123;<br>		<span class="hljs-string">&quot;Org1MSP&quot;</span>: <span class="hljs-keyword">true</span>,<br>		<span class="hljs-string">&quot;Org2MSP&quot;</span>: <span class="hljs-keyword">true</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>升级链码:</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">peer lifecycle chaincode commit -o localhost:<span class="hljs-number">7050</span> --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name hyperledger-fabric-app-java-demo --version <span class="hljs-number">1.0</span> --sequence <span class="hljs-number">1</span> --tls --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem --peerAddresses localhost:<span class="hljs-number">7051</span> --tlsRootCertFiles <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>peerOrganizations<span class="hljs-regexp">/org1.example.com/</span>peers<span class="hljs-regexp">/peer0.org1.example.com/</span>tls<span class="hljs-regexp">/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles $&#123;PWD&#125;/</span>organizations<span class="hljs-regexp">/peerOrganizations/</span>org2.example.com<span class="hljs-regexp">/peers/</span>peer0.org2.example.com<span class="hljs-regexp">/tls/</span>ca.crt<br></code></pre></td></tr></table></figure>
+
+<p>可以使用peer lifecycle chaincode querycommitted命令来确认链码定义已提交给通道。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">peer lifecycle chaincode querycommitted --channelID mychannel --name hyperledger-fabric-app-java-demo --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem<br></code></pre></td></tr></table></figure>
+
+<p>成功返回链码的定义顺序和版本之后可以调用链码进行测试</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">peer chaincode invoke -o localhost:<span class="hljs-number">7050</span> --ordererTLSHostnameOverride orderer.example.com --tls --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem -C mychannel -n chaincode_demo_1 --peerAddresses localhost:<span class="hljs-number">7051</span> --tlsRootCertFiles <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>peerOrganizations<span class="hljs-regexp">/org1.example.com/</span>peers<span class="hljs-regexp">/peer0.org1.example.com/</span>tls<span class="hljs-regexp">/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles $&#123;PWD&#125;/</span>organizations<span class="hljs-regexp">/peerOrganizations/</span>org2.example.com<span class="hljs-regexp">/peers/</span>peer0.org2.example.com<span class="hljs-regexp">/tls/</span>ca.crt -c <span class="hljs-string">&#x27;&#123;&quot;function&quot;:&quot;createCat&quot;,&quot;Args&quot;:[&quot;cat-KEY&quot;,&quot;test - KEY&quot;,12, &quot;red&quot;, &quot;aaa&quot;]&#125;&#x27;</span><br><br>peer chaincode query -C mychannel -n hyperledger-fabric-contract-java-demo -c <span class="hljs-string">&#x27;&#123;&quot;Args&quot;:[&quot;queryCat&quot; , &quot;cat-0&quot;]&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-定义fabric-gateway-java的配置文件"><a href="#2-定义fabric-gateway-java的配置文件" class="headerlink" title="2.定义fabric-gateway-java的配置文件"></a>2.定义fabric-gateway-java的配置文件</h3><p>参考<a href="%22https://github.com/hyperledger/fabric-gateway-java/blob/main/src/test/java/org/hyperledger/fabric/gateway/connection.json%22">gateway的github</a></p>
+<p><img src="/2022/03/29/fabric-gateway-java/image-20220330205633378" srcset="/img/loading.gif" lazyload alt="image-20220330205633378"></p>
+<p>其中需要修改的地方有两点</p>
+<ul>
+<li>crypto-config中的证书文件需要替换启动环境中的文件</li>
+<li>networkConnection可以copygithub中的例子，其中与peer节点交互的ip需改成虚拟机中的IP</li>
+</ul>
+<p>其中application.properties中的内容为</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment"># 应用名称</span><br>spring.application.name=hyperledger-fabric-app-java-demo<br><span class="hljs-comment"># 应用服务 WEB 访问端口</span><br>server.port=<span class="hljs-number">8080</span><br><br><span class="hljs-comment">#网络配置</span><br>fabric.networkConnectionConfigPath=src<span class="hljs-regexp">/main/</span>resources/networkConnection.json<br><span class="hljs-comment">#证书路径</span><br>fabric.certificatePath=src<span class="hljs-regexp">/main/</span>resources<span class="hljs-regexp">/crypto-config/</span>peerOrganizations<span class="hljs-regexp">/org1.example.com/u</span>sers<span class="hljs-regexp">/User1@org1.example.com/m</span>sp<span class="hljs-regexp">/signcerts/</span>User1@org1.example.com-cert.pem<br><span class="hljs-comment">#私钥路径</span><br>fabric.privateKeyPath=src<span class="hljs-regexp">/main/</span>resources<span class="hljs-regexp">/crypto-config/</span>peerOrganizations<span class="hljs-regexp">/org1.example.com/u</span>sers<span class="hljs-regexp">/User1@org1.example.com/m</span>sp<span class="hljs-regexp">/keystore/</span>priv_sk<br><br>logging.level.org.hyperledger=trace<br></code></pre></td></tr></table></figure>
+
+<p>Controller中获取的name也需要和虚拟机中启动的链码的name相对应</p>
+<p><img src="/2022/03/29/fabric-gateway-java/image-20220330210328591" srcset="/img/loading.gif" lazyload alt="image-20220330210328591"></p>
+<p>写好直接启动进行测试即可，使用postman去调用gateway的接口和虚拟机中的区块链进行交互</p>
+<p><img src="/2022/03/29/fabric-gateway-java/image-20220330210432218" srcset="/img/loading.gif" lazyload alt="image-20220330210432218"></p>
+<p><img src="/2022/03/29/fabric-gateway-java/image-20220330210441286" srcset="/img/loading.gif" lazyload alt="image-20220330210441286"></p>
+<p>使用PUT方法对应的invoke中的createCat方法，传递过去的值需要以json的格式满足代码中的要求，尝试创建一个相同的对象则会返回其已经存在。</p>
+<p><img src="/2022/03/29/fabric-gateway-java/image-20220330210635136" srcset="/img/loading.gif" lazyload alt="image-20220330210635136"></p>
+<p><img src="/2022/03/29/fabric-gateway-java/image-20220330210708825" srcset="/img/loading.gif" lazyload alt="image-20220330210708825"></p>
+<p>其他查询更新删除方法也类似，更换发包的类型则可以实现不同的方法。</p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/kernelHP/hyperledger-fabric-app-java-demo.git">gateway方法源码</a></p>
+<p><a href="%5Bhttps://github.com/hyperledger/fabric-gateway-java/blob/main/src/test/java/org/hyperledger/fabric/gateway/connection-tls.json%5D(https://gitee.com/link?target=https://github.com/hyperledger/fabric-gateway-java/blob/main/src/test/java/org/hyperledger/fabric/gateway/connection-tls.json)">connection.json配置文件参考</a></p>
+<p><a target="_blank" rel="noopener" href="https://gitee.com/kernelHP/hyperledger-fabric-contract-java-demo">智能合约源码</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_28540443/article/details/104451259">SDK实践</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904070390480910">设置背书策略</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/">
+                        <span class="hidden-mobile">NFT铸造and交易</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

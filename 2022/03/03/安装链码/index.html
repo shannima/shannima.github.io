@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="Moindyの博客">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  <meta name="description" content="1. 打包智能合约1.1 进入test-network1cd test-network  1.2 将bin目录中二进制文件添加环境变量12export PATH&#x3D;$&amp;#123;PWD&amp;#125;&#x2F;..&#x2F;bin:$PATHexport FABRIC_CFG_PATH&#x3D;$PWD&#x2F;..&#x2F;config&#x2F;  1.3 创建链码包1peer lifecycle chaincode package java_ga">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安装链码">
+<meta property="og:url" content="http://example.com/2022/03/03/%E5%AE%89%E8%A3%85%E9%93%BE%E7%A0%81/index.html">
+<meta property="og:site_name" content="Moindy&#39;Blog">
+<meta property="og:description" content="1. 打包智能合约1.1 进入test-network1cd test-network  1.2 将bin目录中二进制文件添加环境变量12export PATH&#x3D;$&amp;#123;PWD&amp;#125;&#x2F;..&#x2F;bin:$PATHexport FABRIC_CFG_PATH&#x3D;$PWD&#x2F;..&#x2F;config&#x2F;  1.3 创建链码包1peer lifecycle chaincode package java_ga">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-03T08:36:26.000Z">
+<meta property="article:modified_time" content="2022-04-05T08:37:07.738Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>安装链码 - Moindy&#39;Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Moindy</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="安装链码">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-03-03 16:36" pubdate>
+        2022年3月3日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      19 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">安装链码</h1>
+            
+            <div class="markdown-body">
+              <h2 id="1-打包智能合约"><a href="#1-打包智能合约" class="headerlink" title="1. 打包智能合约"></a>1. 打包智能合约</h2><h3 id="1-1-进入test-network"><a href="#1-1-进入test-network" class="headerlink" title="1.1 进入test-network"></a>1.1 进入test-network</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell"><span class="hljs-built_in">cd</span> <span class="hljs-built_in">test-network</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="1-2-将bin目录中二进制文件添加环境变量"><a href="#1-2-将bin目录中二进制文件添加环境变量" class="headerlink" title="1.2 将bin目录中二进制文件添加环境变量"></a>1.2 将bin目录中二进制文件添加环境变量</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">PATH</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/../bin:$PATH<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">FABRIC_CFG_PATH</span>=<span class="hljs-variable">$PWD</span>/../config/<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-3-创建链码包"><a href="#1-3-创建链码包" class="headerlink" title="1.3 创建链码包"></a>1.3 创建链码包</h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">peer lifecycle chaincode package java_gateway_demo.tar.gz <span class="hljs-params">--path</span> <span class="hljs-string">../java_gateway/</span> <span class="hljs-params">--lang</span> java <span class="hljs-params">--label</span> java_gateway_demo_1<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-安装链码"><a href="#2-安装链码" class="headerlink" title="2. 安装链码"></a>2. 安装链码</h2><p>打包java_gateway_demo智能合约后，在peer节点上安装链码。需要在将认可交易的每个peer节点上安装链码。因为我们将设置背书策略以要求来自Org1和Org2的背书，所以我们需要在两个组织的peer节点上安装链码</p>
+<h3 id="2-1-Org1-peer节点安装链码"><a href="#2-1-Org1-peer节点安装链码" class="headerlink" title="2.1 Org1 peer节点安装链码"></a>2.1 Org1 peer节点安装链码</h3><p>设置以下环境变量，以Org1身份操作peer cli</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_TLS_ENABLED</span>=<span class="hljs-literal">true</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_LOCALMSPID</span>=<span class="hljs-string">&quot;Org1MSP&quot;</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_TLS_ROOTCERT_FILE</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_MSPCONFIGPATH</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_ADDRESS</span>=localhost:7051<br><span class="hljs-comment"># peer lifecycle chaincode安装链码</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">peer </span>lifecycle chaincode install java_gateway_demo.tar.gz<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-Org2-peer节点安装链码"><a href="#2-2-Org2-peer节点安装链码" class="headerlink" title="2.2 Org2 peer节点安装链码"></a>2.2 Org2 peer节点安装链码</h3><p>设置以下环境变量，以Org2身份操作peer CLI</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_LOCALMSPID</span>=<span class="hljs-string">&quot;Org2MSP&quot;</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_TLS_ROOTCERT_FILE</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_TLS_ROOTCERT_FILE</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_MSPCONFIGPATH</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_ADDRESS</span>=localhost:9051<br><span class="hljs-comment"># peer lifecycle chaincode安装链码</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">peer </span>lifecycle chaincode install java_gateway_demo.tar.gz<br></code></pre></td></tr></table></figure>
+
+<strong>
+<font color="red">
+注意：安装链码时，链码由peer节点构建。如果智能合约代码有问题，install命令将从链码中返回所有构建错误。
+因为安装 java 链码的时候需要经过 maven 构建以及下载依赖包的过程这个过程有可能会较慢，所以 install 命令有可能会返回一个超时错误:。但是其实链码的 docker 容器内此时还在执行构建任务没有完成。等到构建成功了链码包也就安装成功了。
+</font>
+</strong>
+
+<h2 id="3-通过链码定义"><a href="#3-通过链码定义" class="headerlink" title="3 通过链码定义"></a>3 通过链码定义</h2><p>安装链码包后，需要通过组织的链码定义。该定义包括链码管理的重要参数，例如名称，版本和链码认可策略。</p>
+<p>如果组织已在其peer节点上安装了链码，则他们需要在其组织通过的链码定义中包括包ID。包ID用于将peer节点上安装的链码与通过的链码定义相关联，并允许组织使用链码来认可交易。</p>
+<h3 id="3-1-查询包ID"><a href="#3-1-查询包ID" class="headerlink" title="3.1 查询包ID"></a>3.1 查询包ID</h3><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">peer lifecycle chaincode queryinstalled</span><br></code></pre></td></tr></table></figure>
+
+<p>通过链码时，我们将使用包ID，因此，将包ID保存为环境变量。将返回的包ID粘贴到下面的命令中。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">java</span>-demo_<span class="hljs-number">1</span>:cf<span class="hljs-number">57</span>bbad<span class="hljs-number">4747</span>cb<span class="hljs-number">1</span>eb<span class="hljs-number">45</span>ae<span class="hljs-number">22</span>fd<span class="hljs-number">95</span>f<span class="hljs-number">6</span>e<span class="hljs-number">7</span>aa<span class="hljs-number">04</span>a<span class="hljs-number">72</span>df<span class="hljs-number">4</span>d<span class="hljs-number">109518</span>f<span class="hljs-number">5</span>a<span class="hljs-number">7</span>e<span class="hljs-number">31</span>a<span class="hljs-number">657</span>fa<span class="hljs-number">442</span><br><span class="hljs-comment">#链码id</span><br><span class="hljs-attribute">export</span> CC_PACKAGE_ID=java_gateway_demo_<span class="hljs-number">1</span>:cf<span class="hljs-number">57</span>bbad<span class="hljs-number">4747</span>cb<span class="hljs-number">1</span>eb<span class="hljs-number">45</span>ae<span class="hljs-number">22</span>fd<span class="hljs-number">95</span>f<span class="hljs-number">6</span>e<span class="hljs-number">7</span>aa<span class="hljs-number">04</span>a<span class="hljs-number">72</span>df<span class="hljs-number">4</span>d<span class="hljs-number">109518</span>f<span class="hljs-number">5</span>a<span class="hljs-number">7</span>e<span class="hljs-number">31</span>a<span class="hljs-number">657</span>fa<span class="hljs-number">442</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-Org2-通过链码定义"><a href="#3-2-Org2-通过链码定义" class="headerlink" title="3.2 Org2 通过链码定义"></a>3.2 Org2 通过链码定义</h3><p>因为已经设置了环境变量为peer CLI作为Orig2管理员进行操作，所以我们可以以Org2组织级别将 java_gateway_demo 的链码定义通过。使用 peer lifecycle chaincode approveformyorg命令通过链码定义：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">peer lifecycle chaincode approveformyorg -o localhost:<span class="hljs-number">7050</span> --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name java_gateway_demo_1 --version <span class="hljs-number">1.0</span> --package-id <span class="hljs-variable">$CC_PACKAGE_ID</span> --sequence <span class="hljs-number">1</span> --tls --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3Org1-通过链码定义"><a href="#3-3Org1-通过链码定义" class="headerlink" title="3. 3Org1 通过链码定义"></a>3. 3Org1 通过链码定义</h3><p>设置以下环境变量以Org1管理员身份运行：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_LOCALMSPID</span>=<span class="hljs-string">&quot;Org1MSP&quot;</span><br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_MSPCONFIGPATH</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_TLS_ROOTCERT_FILE</span>=<span class="hljs-variable">$&#123;PWD&#125;</span>/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt<br><span class="hljs-builtin-name">export</span> <span class="hljs-attribute">CORE_PEER_ADDRESS</span>=localhost:7051<br></code></pre></td></tr></table></figure>
+
+<p>用 peer lifecycle chaincode approveformyorg命令通过链码定义</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">peer lifecycle chaincode approveformyorg -o localhost:<span class="hljs-number">7050</span> --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name java_gateway_demo_1 --version <span class="hljs-number">1.0</span> --package-id <span class="hljs-variable">$CC_PACKAGE_ID</span> --sequence <span class="hljs-number">1</span> --tls --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-将链码定义提交给通道"><a href="#4-将链码定义提交给通道" class="headerlink" title="4 将链码定义提交给通道"></a>4 将链码定义提交给通道</h2><p>使用peer lifecycle chaincode checkcommitreadiness命令来检查通道成员是否已批准相同的链码定义：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name java_gateway_demo_1 --version <span class="hljs-number">1.0</span> --sequence <span class="hljs-number">1</span> --tls --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem --output json<br></code></pre></td></tr></table></figure>
+
+<p>该命令将生成一个JSON映射，该映射显示通道成员是否批准了checkcommitreadiness命令中指定的参数：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>	<span class="hljs-attr">&quot;approvals&quot;</span>: &#123;<br>		<span class="hljs-attr">&quot;Org1MSP&quot;</span>: <span class="hljs-literal">true</span>,<br>		<span class="hljs-attr">&quot;Org2MSP&quot;</span>: <span class="hljs-literal">true</span><br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<strong>
+<font color="red">
+由于作为通道成员的两个组织都同意了相同的参数，因此链码定义已准备好提交给通道。你可以使用peer lifecycle chaincode commit命令将链码定义提交到通道。commit命令还需要由组织管理员提交。
+</font>
+</strong>
+
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">peer lifecycle chaincode commit -o localhost:<span class="hljs-number">7050</span> --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name java_gateway_demo_1 --version <span class="hljs-number">1.0</span> --sequence <span class="hljs-number">1</span> --tls --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem --peerAddresses localhost:<span class="hljs-number">7051</span> --tlsRootCertFiles <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>peerOrganizations<span class="hljs-regexp">/org1.example.com/</span>peers<span class="hljs-regexp">/peer0.org1.example.com/</span>tls<span class="hljs-regexp">/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles $&#123;PWD&#125;/</span>organizations<span class="hljs-regexp">/peerOrganizations/</span>org2.example.com<span class="hljs-regexp">/peers/</span>peer0.org2.example.com<span class="hljs-regexp">/tls/</span>ca.crt<br></code></pre></td></tr></table></figure>
+
+<p>可以使用peer lifecycle chaincode querycommitted命令来确认链码定义已提交给通道。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">peer lifecycle chaincode querycommitted --channelID mychannel --name java_gateway_demo_1 --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem<br></code></pre></td></tr></table></figure>
+
+<p>如果将链码成功提交给通道，该querycommitted命令将返回链码定义的顺序和版本:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">Version:</span> <span class="hljs-number">1.0</span><span class="hljs-string">,</span> <span class="hljs-attr">Sequence:</span> <span class="hljs-number">1</span><span class="hljs-string">,</span> <span class="hljs-attr">Endorsement Plugin:</span> <span class="hljs-string">escc,</span> <span class="hljs-attr">Validation Plugin:</span> <span class="hljs-string">vscc,</span> <span class="hljs-attr">Approvals:</span> [<span class="hljs-attr">Org1MSP:</span> <span class="hljs-literal">true</span>, <span class="hljs-attr">Org2MSP:</span> <span class="hljs-literal">true</span>]<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-调用链码"><a href="#5-调用链码" class="headerlink" title="5 调用链码"></a>5 调用链码</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">peer chaincode invoke -o localhost:<span class="hljs-number">7050</span> --ordererTLSHostnameOverride orderer.example.com --tls --cafile <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>ordererOrganizations<span class="hljs-regexp">/example.com/</span>orderers<span class="hljs-regexp">/orderer.example.com/m</span>sp<span class="hljs-regexp">/tlscacerts/</span>tlsca.example.com-cert.pem -C mychannel -n java_gateway_demo_1 --peerAddresses localhost:<span class="hljs-number">7051</span> --tlsRootCertFiles <span class="hljs-variable">$&#123;PWD&#125;</span><span class="hljs-regexp">/organizations/</span>peerOrganizations<span class="hljs-regexp">/org1.example.com/</span>peers<span class="hljs-regexp">/peer0.org1.example.com/</span>tls<span class="hljs-regexp">/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles $&#123;PWD&#125;/</span>organizations<span class="hljs-regexp">/peerOrganizations/</span>org2.example.com<span class="hljs-regexp">/peers/</span>peer0.org2.example.com<span class="hljs-regexp">/tls/</span>ca.crt -c <span class="hljs-string">&#x27;&#123;&quot;function&quot;:&quot;userRegister&quot;,&quot;Args&quot;:[&quot;test&quot; , &quot;test&quot;]&#125;&#x27;</span><br><br>peer chaincode query -C mychannel -n hyperledger-fabric-contract-java-demo -c <span class="hljs-string">&#x27;&#123;&quot;Args&quot;:[&quot;queryAsset&quot; , &quot;test&quot;]&#125;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>看到 Chaincode invoke successful. result: status:200 信息证明链码调用成功:</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/12/NFT%E9%93%B8%E9%80%A0and%E4%BA%A4%E6%98%93/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">NFT铸造and交易</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/08/go-bypass/">
+                        <span class="hidden-mobile">go_bypass</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
