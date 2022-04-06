@@ -209,12 +209,7 @@
           
             
           
-          部署合约1.maven部署需要下载很多依赖导致合约部署过程会非常漫长，所以可以直接在IDEA中对maven进行封装
-
-封装好的jar包就会保存在当前项目的target下，将生成好的chaincode.jar复制到虚拟机需要部署合约的文件夹中
-
-然后对合约进行部署：
-12345#将bin目录中的二进制文件添加到CLI路径中export PATH=$&#123;PWD&#125;/../bin:$PA
+          基于Fabric的一个链码的交互复现。
         </a>
       </p>
 
@@ -228,6 +223,20 @@
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Blockchain/">Blockchain</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/chaincode/">chaincode</a>
+            
+          </div>
         
       </div>
     </article>
@@ -250,13 +259,7 @@
           
             
           
-          首先将智能合约打包并且上链部署(ps:参考合约部署.md)
-使用fabric-ca-cline注册生成org1和org2，org1代表管理端(铸币端)，org2代表接受端并生成其身份证书文件和MSP文件
-
-org2端同理，先注册然后使用fabric-ca-cline enroll生成
-铸币阶段使用peer来为org1铸造一个NFT
-
-mint函数验证客户端是铸币者组织的成员然后为其生成一个不可替代
+          参考Fabric-sample中的ERC-721进行的复现
         </a>
       </p>
 
@@ -270,6 +273,20 @@ mint函数验证客户端是铸币者组织的成员然后为其生成一个不�
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Blockchain/">Blockchain</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/chaincode/">chaincode</a>
+            
+          </div>
         
       </div>
     </article>
@@ -292,11 +309,7 @@ mint函数验证客户端是铸币者组织的成员然后为其生成一个不�
           
             
           
-          1. 打包智能合约1.1 进入test-network1cd test-network
-
-1.2 将bin目录中二进制文件添加环境变量12export PATH=$&#123;PWD&#125;/../bin:$PATHexport FABRIC_CFG_PATH=$PWD/../config/
-
-1.3 创建链码包1peer lifecycle chaincode package java_ga
+          Fabric chaincode的一个链码安装过程。
         </a>
       </p>
 
@@ -310,6 +323,20 @@ mint函数验证客户端是铸币者组织的成员然后为其生成一个不�
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Blockchain/">Blockchain</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/chaincode/">chaincode</a>
+            
+          </div>
         
       </div>
     </article>
@@ -332,14 +359,7 @@ mint函数验证客户端是铸币者组织的成员然后为其生成一个不�
           
             
           
-          实验室摸鱼之余找到了一篇基于go语言的一个免杀项目，于是手痒立刻上手试试：
-1https://github.com/Hangingsword/HouQing
-
-该项目使用的是golang语言，可以快速生成exe可执行文件
-下载完是两个文件：
-​                
-其中code.go是用来生成加载了shellcode的图片，loader.go则是加载器。(原理类似与分离免杀
-首先需要先
+          实验室摸鱼之余找到了一篇基于go语言的一个免杀项目，于是想着复现+学习
         </a>
       </p>
 
@@ -353,6 +373,20 @@ mint函数验证客户端是铸币者组织的成员然后为其生成一个不�
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%B8%97%E9%80%8F/">渗透</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%85%8D%E6%9D%80/">免杀</a>
+            
+          </div>
         
       </div>
     </article>
@@ -375,10 +409,7 @@ mint函数验证客户端是铸币者组织的成员然后为其生成一个不�
           
             
           
-          Badusb制作
-实验室摸鱼的时候没来由又想玩玩近源渗透所以就有了这篇文章，没什么技术含量单纯是好玩整活用的大佬勿喷。
-HID攻击原理HID是Human Interface Device的缩写，是直接与人交互的设备，比如键盘、鼠标等等。攻击者可以将usb模拟成键盘，让电脑识别成为键盘，然后进行脚本模拟按键攻击。这种常用于近源渗透，可以配合社工一起使用。
-HID攻击可以分为很多种，比如Teensy和
+          实验室摸鱼的时候没来由又想玩玩近源渗透所以就有了这篇文章，没什么技术含量单纯是好玩整活用的大佬勿喷。
         </a>
       </p>
 
@@ -392,6 +423,20 @@ HID攻击可以分为很多种，比如Teensy和
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%B8%97%E9%80%8F/">渗透</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Badusb/">Badusb</a>
+            
+          </div>
         
       </div>
     </article>
@@ -414,9 +459,7 @@ HID攻击可以分为很多种，比如Teensy和
           
             
           
-          bilibili 1024 CTF第一题12341024程序员节，大家一起和2233参与解密游戏吧~happy_1024_2233:e9ca6f21583a1533d3ff4fd47ddc463c6a1c7d2cf084d3640408abca7deabb96a58f50471171b60e02b1a8dbd32db156
-
-看不懂解密直接一把梭，解密全试错了一遍，猜测happy_1024_223
+          B站1024 CTF wp
         </a>
       </p>
 
@@ -430,6 +473,20 @@ HID攻击可以分为很多种，比如Teensy和
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%B8%97%E9%80%8F/">渗透</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ctf/">ctf</a>
+            
+          </div>
         
       </div>
     </article>
@@ -523,7 +580,7 @@ HID攻击可以分为很多种，比如Teensy和
 		var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
 		var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
 		var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
-		document.getElementById("sitetime").innerHTML=" 已运行"+/*diffYears+" 年 "+*/diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒";
+		document.getElementById("sitetime").innerHTML=" 本博客已运行"+/*diffYears+" 年 "+*/diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒(●'◡'●)";
 	}
 	siteTime();
 </script>
