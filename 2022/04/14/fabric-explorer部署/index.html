@@ -1,0 +1,578 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="使用docker部署区块链浏览器。">
+  <meta name="author" content="Shannima">
+  <meta name="keywords" content="">
+  <meta name="description" content="使用docker部署区块链浏览器。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fabric explorer部署">
+<meta property="og:url" content="http://example.com/2022/04/14/fabric-explorer%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="Moindy&#39;Blog">
+<meta property="og:description" content="使用docker部署区块链浏览器。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2022/04/14/fabric-explorer%E9%83%A8%E7%BD%B2/2.png">
+<meta property="og:image" content="http://example.com/2022/04/14/fabric-explorer%E9%83%A8%E7%BD%B2/1.png">
+<meta property="article:published_time" content="2022-04-14T01:54:36.000Z">
+<meta property="article:modified_time" content="2022-04-14T01:58:01.036Z">
+<meta property="article:author" content="Shannima">
+<meta property="article:tag" content="chaincode">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2022/04/14/fabric-explorer%E9%83%A8%E7%BD%B2/2.png">
+  
+  <title>fabric explorer部署 - Moindy&#39;Blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+  
+<link rel="stylesheet" href="//source/css/mac.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/bynotes/texiao/source/css/shubiao.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":"099cc08191e54f6c390011944cda9157","google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Moindy&#39;Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="fabric explorer部署">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-04-14 09:54" pubdate>
+        2022年4月14日 上午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">fabric explorer部署</h1>
+            
+            <div class="markdown-body">
+              <h2 id="区块链浏览器"><a href="#区块链浏览器" class="headerlink" title="区块链浏览器"></a>区块链浏览器</h2><h3 id="区块链浏览器部署"><a href="#区块链浏览器部署" class="headerlink" title="区块链浏览器部署"></a>区块链浏览器部署</h3><p>首先git clone下来如下配置文件</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/hyperledger/</span>blockchain-explorer<span class="hljs-regexp">/blob/m</span>ain/docker-compose.yaml<br>https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/hyperledger/</span>blockchain-explorer<span class="hljs-regexp">/blob/m</span>ain<span class="hljs-regexp">/examples/</span>net1<span class="hljs-regexp">/connection-profile/</span>test-network.json<br>https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/hyperledger/</span>blockchain-explorer<span class="hljs-regexp">/blob/m</span>ain<span class="hljs-regexp">/examples/</span>net1/config.json<br></code></pre></td></tr></table></figure>
+
+<p>然后再对其进行修改，其中使用的docker-compose.yaml是用于pull expolorer的镜像以及其配置文件的</p>
+<p>test-network.json  连接到fabric网络的配置文件</p>
+<p>config.json则是用来指定fabric网络连接配置文件的路径</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">docker-compose.yaml中定义的：<br>	<span class="hljs-number">1</span>.explorer所使用的后端的存储postgresql以及数据库的账户密码<br>	<span class="hljs-number">2</span>.explorer项目本身环境变量以及账户密码<br>	<span class="hljs-number">3</span>.volumns  需要挂载<span class="hljs-built_in">config</span>.<span class="hljs-keyword">json </span>   <br>	<span class="hljs-number">4</span>.连接的配置信息connection-profile   <br>	<span class="hljs-number">5</span>.以及区块链网络所使用的身份信息文件<br></code></pre></td></tr></table></figure>
+
+<h3 id="编写docker-compose-explorer-yaml文件"><a href="#编写docker-compose-explorer-yaml文件" class="headerlink" title="编写docker-compose-explorer.yaml文件"></a>编写docker-compose-explorer.yaml文件</h3><p>参考github种的docker-compose进行编写docker-compose-explorer.yaml文件</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">version</span>: <span class="hljs-string">&#x27;2.1&#x27;</span><br>volume<span class="hljs-variable">s:</span><br>    pgdat<span class="hljs-variable">a:</span><br>    walletstore:<br>service<span class="hljs-variable">s:</span><br>    explorerdb.mynetwork.<span class="hljs-keyword">com</span>:<br>        image: hyperledger/explorer-d<span class="hljs-variable">b:latest</span><br>        container_name: explorerdb.mynetwork.<span class="hljs-keyword">com</span><br>        <span class="hljs-built_in">hostname</span>: explorerdb.mynetwork.<span class="hljs-keyword">com</span><br>        restar<span class="hljs-variable">t:</span> always<br>        port<span class="hljs-variable">s:</span><br>            - <span class="hljs-number">5432</span>:<span class="hljs-number">5432</span><br>        environmen<span class="hljs-variable">t:</span><br>            - DATABASE_DATABASE=fabricexplorer<br>            - DATABASE_USERNAME=hppoc<br>            - DATABASE_PASSWORD=password<br>        healthcheck:<br>            tes<span class="hljs-variable">t:</span> <span class="hljs-string">&quot;pg_isready -h localhost -p 5432 -q -U postgres&quot;</span><br>            interva<span class="hljs-variable">l:</span> <span class="hljs-number">30</span>s<br>            timeou<span class="hljs-variable">t:</span> <span class="hljs-number">10</span>s<br>            retrie<span class="hljs-variable">s:</span> <span class="hljs-number">5</span><br>        volume<span class="hljs-variable">s:</span><br>            - pgdat<span class="hljs-variable">a:</span>/var/lib/postgresql/data<br><br><br>    explorer.mynetwork.<span class="hljs-keyword">com</span>:<br>        image: hyperledger/explorer:latest<br>        container_name: explorer.mynetwork.<span class="hljs-keyword">com</span><br>        <span class="hljs-built_in">hostname</span>: explorer.mynetwork.<span class="hljs-keyword">com</span><br>        restar<span class="hljs-variable">t:</span> always<br>        port<span class="hljs-variable">s:</span><br>            - <span class="hljs-number">9091</span>:<span class="hljs-number">8080</span><br>        extra_host<span class="hljs-variable">s:</span><br>            - <span class="hljs-string">&quot;explorerdb.mynetwork.com:192.168.177.128&quot;</span><br>            - <span class="hljs-string">&quot;orderer0.example.com:192.168.177.128&quot;</span><br>            - <span class="hljs-string">&quot;orderer1.example.com:192.168.177.128&quot;</span><br>            - <span class="hljs-string">&quot;orderer2.example.com:192.168.177.128&quot;</span><br>            - <span class="hljs-string">&quot;peer0.org1.example.com:192.168.177.128&quot;</span><br>            - <span class="hljs-string">&quot;peer1.org1.example.com:192.168.177.128&quot;</span><br>            - <span class="hljs-string">&quot;peer0.org2.example.com:192.168.177.128&quot;</span><br>            - <span class="hljs-string">&quot;peer1.org2.example.com:192.168.177.128&quot;</span><br>        environmen<span class="hljs-variable">t:</span><br>            - DATABASE_HOST=explorerdb.mynetwork.<span class="hljs-keyword">com</span><br>            - DATABASE_DATABASE=fabricexplorer<br>            - DATABASE_USERNAME=hppoc<br>            - DATABASE_PASSWD=password<br>            - LOG_LEVEL_APP=<span class="hljs-keyword">debug</span><br>            - LOG_LEVEL_DB=info<br>            - LOG_LEVEL_CONSOLE=<span class="hljs-keyword">debug</span><br>            - LOG_CONSOLE_STDOUT=true<br>            - DISCOVERY_AS_LOCALHOST=false<br>        volume<span class="hljs-variable">s:</span><br>            - ./config.json:/<span class="hljs-keyword">opt</span>/explorer/app/platform/fabric/config.json<br>            - ./connection-<span class="hljs-keyword">profile</span>:/<span class="hljs-keyword">opt</span>/explorer/app/platform/fabric/connection-<span class="hljs-keyword">profile</span><br>            - ../crypto-confi<span class="hljs-variable">g:</span>/tmp/crypto<br>            - walletstore:/<span class="hljs-keyword">opt</span>/explorer/wallet<br>        depends_on:<br>            explorerdb.mynetwork.<span class="hljs-keyword">com</span>:<br>                condition: service_healthy<br></code></pre></td></tr></table></figure>
+
+<h3 id="编写config-json文件"><a href="#编写config-json文件" class="headerlink" title="编写config.json文件"></a>编写config.json文件</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>  <span class="hljs-attr">&quot;network-configs&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;prod-network&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;Prod Network&quot;</span>,<br>      <span class="hljs-attr">&quot;profile&quot;</span>: <span class="hljs-string">&quot;./connection-profile/NetworkConfig.json&quot;</span><br>    &#125;<br>  &#125;,<br>  <span class="hljs-attr">&quot;license&quot;</span>: <span class="hljs-string">&quot;Apache-2.0&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="编写fabric网络连接配置文件"><a href="#编写fabric网络连接配置文件" class="headerlink" title="编写fabric网络连接配置文件"></a>编写fabric网络连接配置文件</h3><p>NetworkConfig.json需要根据我们的网络拓扑结构进行编写</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><code class="hljs json">&#123;<br>  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;prod-network&quot;</span>,<br>  <span class="hljs-attr">&quot;version&quot;</span>: <span class="hljs-string">&quot;1.0.0&quot;</span>,<br>  <span class="hljs-attr">&quot;client&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;tlsEnable&quot;</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">&quot;adminCredential&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-string">&quot;exploreradmin&quot;</span>,<br>      <span class="hljs-attr">&quot;password&quot;</span>: <span class="hljs-string">&quot;exploreradminpw&quot;</span><br>    &#125;,<br>    <span class="hljs-attr">&quot;enableAuthentication&quot;</span>: <span class="hljs-literal">true</span>,<br>    <span class="hljs-attr">&quot;organization&quot;</span>: <span class="hljs-string">&quot;Org1&quot;</span>,<br>    <span class="hljs-attr">&quot;connection&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;timeout&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;peer&quot;</span>: &#123;<br>          <span class="hljs-attr">&quot;endorser&quot;</span>: <span class="hljs-string">&quot;300&quot;</span><br>        &#125;,<br>        <span class="hljs-attr">&quot;orderer&quot;</span>: <span class="hljs-string">&quot;300&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;,<br>  <span class="hljs-attr">&quot;channels&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;businesschannel&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;peers&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;peer0.org1.example.com&quot;</span>: &#123;<br>          <span class="hljs-attr">&quot;endorsingPeer&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;chaincodeQuery&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;ledgerQuery&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;eventSource&quot;</span>: <span class="hljs-literal">true</span><br>        &#125;,<br>        <span class="hljs-attr">&quot;peer1.org1.example.com&quot;</span>: &#123;<br>          <span class="hljs-attr">&quot;endorsingPeer&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;chaincodeQuery&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;ledgerQuery&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;eventSource&quot;</span>: <span class="hljs-literal">true</span><br>        &#125;,<br>        <span class="hljs-attr">&quot;peer0.org2.example.com&quot;</span>: &#123;<br>          <span class="hljs-attr">&quot;endorsingPeer&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;chaincodeQuery&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;ledgerQuery&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;eventSource&quot;</span>: <span class="hljs-literal">true</span><br>        &#125;,<br>        <span class="hljs-attr">&quot;peer1.org2.example.com&quot;</span>: &#123;<br>          <span class="hljs-attr">&quot;endorsingPeer&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;chaincodeQuery&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;ledgerQuery&quot;</span>: <span class="hljs-literal">true</span>,<br>          <span class="hljs-attr">&quot;eventSource&quot;</span>: <span class="hljs-literal">true</span><br>        &#125;<br>      &#125;<br>    &#125;<br>  &#125;,<br>  <span class="hljs-attr">&quot;organizations&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;Org1&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;mspid&quot;</span>: <span class="hljs-string">&quot;Org1MSP&quot;</span>,<br>      <span class="hljs-attr">&quot;peers&quot;</span>: [<br>        <span class="hljs-string">&quot;peer0.org1.example.com&quot;</span>,<br>        <span class="hljs-string">&quot;peer1.org1.example.com&quot;</span><br>      ],<br>      <span class="hljs-attr">&quot;adminPrivateKey&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;path&quot;</span>: <span class="hljs-string">&quot;/tmp/crypto/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/priv_sk&quot;</span><br>      &#125;,<br>      <span class="hljs-attr">&quot;signedCert&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;path&quot;</span>: <span class="hljs-string">&quot;/tmp/crypto/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem&quot;</span><br>      &#125;<br>    &#125;,<br>    <span class="hljs-attr">&quot;Org2&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;mspid&quot;</span>: <span class="hljs-string">&quot;Org2MSP&quot;</span>,<br>      <span class="hljs-attr">&quot;peers&quot;</span>: [<br>        <span class="hljs-string">&quot;peer0.org2.example.com&quot;</span>,<br>        <span class="hljs-string">&quot;peer1.org2.example.com&quot;</span><br>      ],<br>      <span class="hljs-attr">&quot;adminPrivateKey&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;path&quot;</span>: <span class="hljs-string">&quot;/tmp/crypto/prod-network/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/priv_sk&quot;</span><br>      &#125;,<br>      <span class="hljs-attr">&quot;signedCert&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;path&quot;</span>: <span class="hljs-string">&quot;/tmp/crypto/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/signcerts/User1@org2.example.com-cert.pem&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;,<br>  <span class="hljs-attr">&quot;peers&quot;</span>: &#123;<br>    <span class="hljs-attr">&quot;peer0.org1.example.com&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;url&quot;</span>: <span class="hljs-string">&quot;grpcs://peer0.org1.example.com:7051&quot;</span>,<br>      <span class="hljs-attr">&quot;grpcOptions&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;ssl-target-name-override&quot;</span>: <span class="hljs-string">&quot;peer0.org1.example.com&quot;</span>,<br>        <span class="hljs-attr">&quot;hostnameOverride&quot;</span>: <span class="hljs-string">&quot;peer0.org1.example.com&quot;</span>,<br>        <span class="hljs-attr">&quot;request-timeout&quot;</span>: <span class="hljs-number">120001</span><br>      &#125;,<br>      <span class="hljs-attr">&quot;tlsCACerts&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;path&quot;</span>: <span class="hljs-string">&quot;/tmp/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt&quot;</span><br>      &#125;<br>    &#125;,<br>    <span class="hljs-attr">&quot;peer1.org1.example.com&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;url&quot;</span>: <span class="hljs-string">&quot;grpcs://peer1.org1.example.com:8051&quot;</span>,<br>      <span class="hljs-attr">&quot;grpcOptions&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;ssl-target-name-override&quot;</span>: <span class="hljs-string">&quot;peer1.org1.example.com&quot;</span>,<br>        <span class="hljs-attr">&quot;hostnameOverride&quot;</span>: <span class="hljs-string">&quot;peer1.org1.example.com&quot;</span>,<br>        <span class="hljs-attr">&quot;request-timeout&quot;</span>: <span class="hljs-number">120001</span><br>      &#125;,<br>      <span class="hljs-attr">&quot;tlsCACerts&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;path&quot;</span>: <span class="hljs-string">&quot;/tmp/crypto/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt&quot;</span><br>      &#125;<br>    &#125;,<br>    <span class="hljs-attr">&quot;peer0.org2.example.com&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;url&quot;</span>: <span class="hljs-string">&quot;grpcs://peer0.org2.example.com:7051&quot;</span>,<br>      <span class="hljs-attr">&quot;grpcOptions&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;ssl-target-name-override&quot;</span>: <span class="hljs-string">&quot;peer0.org2.example.com&quot;</span>,<br>        <span class="hljs-attr">&quot;hostnameOverride&quot;</span>: <span class="hljs-string">&quot;peer0.org2.example.com&quot;</span>,<br>        <span class="hljs-attr">&quot;request-timeout&quot;</span>: <span class="hljs-number">120001</span><br>      &#125;,<br>      <span class="hljs-attr">&quot;tlsCACerts&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;path&quot;</span>: <span class="hljs-string">&quot;/tmp/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt&quot;</span><br>      &#125;<br>    &#125;,<br>    <span class="hljs-attr">&quot;peer1.org2.example.com&quot;</span>: &#123;<br>      <span class="hljs-attr">&quot;url&quot;</span>: <span class="hljs-string">&quot;grpcs://peer1.org2.example.com:8051&quot;</span>,<br>      <span class="hljs-attr">&quot;grpcOptions&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;ssl-target-name-override&quot;</span>: <span class="hljs-string">&quot;peer1.org2.example.com&quot;</span>,<br>        <span class="hljs-attr">&quot;hostnameOverride&quot;</span>: <span class="hljs-string">&quot;peer1.org2.example.com&quot;</span>,<br>        <span class="hljs-attr">&quot;request-timeout&quot;</span>: <span class="hljs-number">120001</span><br>      &#125;,<br>      <span class="hljs-attr">&quot;tlsCACerts&quot;</span>: &#123;<br>        <span class="hljs-attr">&quot;path&quot;</span>: <span class="hljs-string">&quot;/tmp/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt&quot;</span><br>      &#125;<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="启动explorer"><a href="#启动explorer" class="headerlink" title="启动explorer"></a>启动explorer</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk">docker-compose -f docker-compose-explorer.yaml up -d<br><span class="hljs-comment">#访问区块链浏览器</span><br>http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">9091</span>/<br>其中登录的账户密码在Networkconfig.json中定义可以自行修改<br></code></pre></td></tr></table></figure>
+
+<h3 id="Question"><a href="#Question" class="headerlink" title="Question"></a>Question</h3><p><img src="/2022/04/14/fabric-explorer%E9%83%A8%E7%BD%B2/2.png" srcset="/img/loading.gif" lazyload alt="docker启动报错"></p>
+<p>配置文件无效因为services.explorerdb.mynetwork.com不支持配置选项healthy。这个报错的错误原因在于healthycheck这个选项是docker-compose在2.1中加入的，而git clone下来的配置文件默认是写的2.0，所以需要在docker-compose.yaml的配置文件中将version改为2.1</p>
+<p>2.在进行docker-compose up -d部署之前如果一直有问题可以先使用docker将所需要的images pull下来</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs excel">docker pull hyperledger/explorer-<span class="hljs-built_in">db</span> <br>docker pull hyperledger/explorer<br></code></pre></td></tr></table></figure>
+
+<p>第二次再重新启动docker在查看日志的时候可能会提示这个报错，这个说明的是上次容器启动已经在postgre数据中添加了bussinesschannel这个数据库了，而此次启动的仍然是同一个channel_name所以产生冲突无法启动。</p>
+<p><img src="/2022/04/14/fabric-explorer%E9%83%A8%E7%BD%B2/1.png" srcset="/img/loading.gif" lazyload alt="docker错误日志"></p>
+<p>解决办法:</p>
+<p>1.进入容器中删除该数据库</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs routeros">docker exec -it explorer-db bash<br>psql -U postgres<br><span class="hljs-comment">#查看数据库列表</span><br>postgres-# \l<br><span class="hljs-comment">#进入fabric数据库中 \c表示选中的数据库 \d表示展示表名</span><br><span class="hljs-attribute">postgres</span>=# \c fabricexplorer<br><span class="hljs-attribute">fabricexplorer</span>=# \d<br><span class="hljs-attribute">fabricexplorer</span>=# select * <span class="hljs-keyword">from</span> channel;<br><span class="hljs-attribute">fabricexplorer</span>=# delete <span class="hljs-keyword">from</span> channel where name = <span class="hljs-string">&#x27;businesschannel&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>然后再重新使用docker-compose 命令启动容器，就能发现已经没有报错了。</p>
+<p>2.使用docker-compose关闭容器环境的时候</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs powershell">docker<span class="hljs-literal">-compose</span> <span class="hljs-operator">-f</span> docker<span class="hljs-literal">-compose</span><span class="hljs-literal">-explorer</span>.yaml down <span class="hljs-literal">-v</span><br><span class="hljs-comment">#-v 代表的是清除容器和本地挂在的数据</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/hyperledger/blockchain-explorer">参考文件</a></p>
+<p><a target="_blank" rel="noopener" href="https://my.oschina.net/j4love/blog/5470911">原地址出处</a></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Blockchain/">Blockchain</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/chaincode/">chaincode</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/04/13/docker%E5%8D%95%E6%9C%BA%E9%83%A8%E7%BD%B2%E7%94%9F%E4%BA%A7%E7%BD%91%E7%BB%9C/">
+                        <span class="hidden-mobile">docker单机部署生产网络</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+  <!--添加运行时间-->
+<span id="sitetime"></span>
+<script language=javascript>
+	function siteTime(){
+		window.setTimeout("siteTime()", 1000);
+		var seconds = 1000;
+		var minutes = seconds * 60;
+		var hours = minutes * 60;
+		var days = hours * 24;
+		var years = days * 365;
+		var today = new Date();
+		var todayYear = today.getFullYear();
+		var todayMonth = today.getMonth()+1;
+		var todayDate = today.getDate();
+		var todayHour = today.getHours();
+		var todayMinute = today.getMinutes();
+		var todaySecond = today.getSeconds();
+		/* 
+      Date.UTC() -- 返回date对象距世界标准时间(UTC)1970年1月1日午夜之间的毫秒数(时间戳)
+      year - 作为date对象的年份，为4位年份值
+      month - 0-11之间的整数，做为date对象的月份
+      day - 1-31之间的整数，做为date对象的天数
+      hours - 0(午夜24点)-23之间的整数，做为date对象的小时数
+      minutes - 0-59之间的整数，做为date对象的分钟数
+      seconds - 0-59之间的整数，做为date对象的秒数
+      microseconds - 0-999之间的整数，做为date对象的毫秒数
+     */
+		var t1 = Date.UTC(2021,10,24,18,12,20); //北京时间2018-2-13 00:00:00
+		var t2 = Date.UTC(todayYear,todayMonth,todayDate,todayHour,todayMinute,todaySecond);
+		var diff = t2-t1;
+		var diffYears = Math.floor(diff/years);
+		var diffDays = Math.floor((diff/days)-diffYears*365);
+		var diffHours = Math.floor((diff-(diffYears*365+diffDays)*days)/hours);
+		var diffMinutes = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours)/minutes);
+		var diffSeconds = Math.floor((diff-(diffYears*365+diffDays)*days-diffHours*hours-diffMinutes*minutes)/seconds);
+		document.getElementById("sitetime").innerHTML=" 本博客已运行"+/*diffYears+" 年 "+*/diffDays+" 天 "+diffHours+" 小时 "+diffMinutes+" 分钟 "+diffSeconds+" 秒(●'◡'●)";
+	}
+	siteTime();
+</script>
+<!--// 添加运行时间-->
+
+<!-- 新增访客统计代码 -->
+<!-- <div class="busuanzi-count">
+    <script async="" src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      访问量 <span class="busuanzi-value" id="busuanzi_value_site_uv"></span> 次
+      <span class="post-meta-divider">|</span>
+    </span>
+    <div class="powered-by"></div>
+    <span class="site-uv">
+      <i class="fa fa-eye"></i>
+      总访客 <span class="busuanzi-value" id="busuanzi_value_site_pv"></span> 人
+    </span> -->
+    <!--
+    <span class="site-pv">
+      <i class="fa fa-pencil"></i>
+      本站博客共 <span class="post-count">{{ totalcount(site) }}</span> 字
+    </span>
+    -->
+</div>
+<!-- 新增访客统计代码 END-->
+<!-- <script type="text/javascript" src="../../source/js/click.js"></script> -->
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    <!-- Baidu Analytics -->
+    <script defer>
+      var _hmt = _hmt || [];
+      (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?099cc08191e54f6c390011944cda9157";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/timeDate.js"></script>
+<script src="//cdn.jsdelivr.net/gh/bynotes/texiao/source/js/love.js"></script>
+<script src="//cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/metowolf/Metingjs@1.2/dist/Meting.min.js"></script>
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
