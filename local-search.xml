@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>安装链码</title>
+    <link href="/2022/08/24/PT926E%E6%8B%BFshell%E6%96%B9%E6%B3%95/"/>
+    <url>/2022/08/24/PT926E%E6%8B%BFshell%E6%96%B9%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<p><strong>PT926E 免复位/TTL/FTP获取超密及根目录方法</strong></p><p>昨晚打派中间无缘无故给我断网好几次，排查+问电信的师傅得出的问题感觉可能是新装的宽带的网关功率太大过热导致的问题。所以决定把光猫做桥接，只负责转发电信号就ok</p><p>[1.png] (1.png)</p><h4 id="常规思路"><a href="#常规思路" class="headerlink" title="常规思路"></a>常规思路</h4><h5 id="1-主机漏洞"><a href="#1-主机漏洞" class="headerlink" title="1.主机漏洞"></a>1.主机漏洞</h5><p>先百度搜一波型号找找漏洞</p><p>[2.png] (2.png)</p><p>21、23可以试试ftp和telnet</p><p>搜索引擎刚好也有能通过ftp和telnet拿管理员账号密码的</p><p>[3.png] (3.png)</p><p>FTP的账号密码默认为网关背后的账号密码</p><p>[4.png] (4.png)</p><p>FTP 寄 ！试试Telnet(Telnet用不了的控制面板开一下)，Telnet，寄！</p><p>[5.png] (5.png)</p><p>试了好几遍给的通用密码基本都8太行，可以做排列组合试试，太懒试了几个就没继续了</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs awk">网上的字典大概分为这几种<br>useradmin/网关后面给的密码<br>telecomadmin/nE7jA%<span class="hljs-number">5</span>m<br>telecomadmin/TeleCom_1234<br>telecomadmin/TeleCom_SN后六位<br>admin/TeleCom_1234<br>admin/<span class="hljs-number">1234</span><br>telnet假如端口没开启的话可以通过访问：<br>http:<span class="hljs-regexp">//</span><span class="hljs-number">192.168</span>.<span class="hljs-number">1.1</span>:<span class="hljs-number">8080</span><span class="hljs-regexp">/cgi-bin/</span>abcdidfope94e0934jiewru8ew414.cgi<br></code></pre></td></tr></table></figure><h5 id="PS："><a href="#PS：" class="headerlink" title="PS："></a>PS：</h5><p>后面看到另外一篇文章之后又去复现了一遍</p><p>TeleCom_1234/TeleCom_sn后六位能成功登录</p><p>su提权 密码为TeleCom_1234</p><p>之后就能直接获取shell</p><p>然后通过cat /var/config/lastgood.xml 将文件重定向到txt中就(忘记截图了-.-)</p><h5 id="2-web漏洞"><a href="#2-web漏洞" class="headerlink" title="2.web漏洞"></a>2.web漏洞</h5><p>通过U盘查看文件目录，对文件目录通过修改审查元素实现目录穿越</p><p>[6.png] (6.png)</p><p>将文件命都改成..，通过js的点击事件跳转到上一级目录</p><p>[7.png] (7.png)</p><p><strong>结果：寄!</strong></p><p>最后发现有一处能实现目录穿越</p><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk">url:http:<span class="hljs-regexp">//</span><span class="hljs-number">192.168</span>.<span class="hljs-number">1.1</span><span class="hljs-regexp">/cgi-bin/</span>luci<span class="hljs-regexp">/admin/</span>storage/settings<br>首先需要先使用普通用户登录进控制台<br>然后F12在console中输入<br>get_path_files(<span class="hljs-string">&quot;/&quot;</span>)<br></code></pre></td></tr></table></figure><p>[6.png] (6.png)</p><p>之后进/var/config/中拷贝lastgood.xml文件到你的u盘中即可，打开lastgood.xml搜索teleCom即可找到ftp、telnet、superadmin等所有的账号密码</p><p>[7.png] (7.png)</p><p>再访问192.168.1.1:8080/admin/login.asp即可进入管理界面</p><p>中间摆烂好久+参加hw+接了一些渗透的活 就一直没动力更新文章5555</p><p>太菜了</p><p>接下来一个月一定一定<del>(下次一定)</del>肝一篇论文出来</p><h4 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h4><h5 id="路由器方面的知识可以去恩山论坛看看，有很多意想不到的好东西"><a href="#路由器方面的知识可以去恩山论坛看看，有很多意想不到的好东西" class="headerlink" title="路由器方面的知识可以去恩山论坛看看，有很多意想不到的好东西"></a>路由器方面的知识可以去恩山论坛看看，有很多意想不到的好东西</h5><p><a href="https://post.smzdm.com/p/a992pzl0/">https://post.smzdm.com/p/a992pzl0/</a></p><p><a href="https://www.right.com.cn/FORUM/thread-2203236-1-1.html">https://www.right.com.cn/FORUM/thread-2203236-1-1.html</a></p><p><a href="https://www.right.com.cn/FORUM/forum.php?mod=viewthread&amp;tid=6019067">https://www.right.com.cn/FORUM/forum.php?mod=viewthread&amp;tid=6019067</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>渗透</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>电信光猫</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>fabric explorer部署</title>
     <link href="/2022/04/14/fabric-explorer%E9%83%A8%E7%BD%B2/"/>
     <url>/2022/04/14/fabric-explorer%E9%83%A8%E7%BD%B2/</url>
